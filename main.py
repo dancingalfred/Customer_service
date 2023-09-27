@@ -9,7 +9,10 @@ CURR_DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 dummy_calls = pd.read_csv(CURR_DIR_PATH+'\\'+'test_data.csv', delimiter=';')
 
 df = pd.DataFrame(dummy_calls)
-month_fig=px.bar(df, x='Date', y=['call answered', 'calls missed', 'longest wait']) # monthly data
+
+custom_colors = ['#33FF57','#FF5733']
+
+month_fig=px.bar(df, x='Date', y=['call answered', 'calls missed', 'longest wait'], color_discrete_sequence=custom_colors) # monthly data
 month_fig.update_layout(legend_title_text='Monthly calls')
 month_fig.update_yaxes(title_text='Calls')
 
@@ -18,7 +21,6 @@ df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric, errors='coerce')
 
 app = Dash(__name__)
 
-custom_colors = ['#FF5733', '#33FF57']
 
 app.layout = html.Div([
     html.H1("Giggle Gear Dashboard"),
@@ -26,7 +28,7 @@ app.layout = html.Div([
     dcc.Graph( #Shows who in an call, whos waiting and whos available
         figure=px.bar(df, x="employee packing", y=["employee active", "emplyee inactive"],
                        barmode='group',
-                       height=400, color_discrete_sequence=custom_colors,
+                       height=350, color_discrete_sequence=custom_colors,
                        labels={"employee packing": "Packing", "employee active": "Active", "emplyee inactive": "Inactive"}),
         style={'width': '50%', 'height': '50%'}
     ),
