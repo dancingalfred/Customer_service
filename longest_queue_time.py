@@ -41,26 +41,28 @@ def update_graph(relayoutData):
     )
 
     # Update the speed indicator graph
+    value_longest_wait = df.at[0, 'longest wait']
     speed_data = [
         go.Indicator(
             mode="gauge+number+delta",
-            value=420,
+            value=float(value_longest_wait),
             domain={'x': [0, 1], 'y': [0, 1]},
             title={'text': "Minutes", 'font': {'size': 24}},
-            delta={'reference': 400, 'increasing': {'color': "RebeccaPurple"}},
+            # delta={'reference': int(value_longest_wait), 'increasing': {'color': "RebeccaPurple"}},
             gauge={
-                'axis': {'range': [None, 500], 'tickwidth': 1, 'tickcolor': "darkblue"},
+                'axis': {'range': [None, 60], 'tickwidth': 1, 'tickcolor': "darkblue"},
                 'bar': {'color': "darkblue"},
                 'bgcolor': "white",
                 'borderwidth': 2,
                 'bordercolor': "gray",
                 'steps': [
-                    {'range': [0, 250], 'color': 'cyan'},
-                    {'range': [250, 400], 'color': 'royalblue'}],
+                    {'range': [0, 5], 'color': 'green'},
+                    {'range': [5, 15], 'color': 'orange'},
+                    {'range': [15, 60], 'color': 'red'}],
                 'threshold': {
-                    'line': {'color': "red", 'width': 4},
+                    'line': {'color': "gold", 'width': 4},
                     'thickness': 0.75,
-                    'value': 490
+                    'value': int(value_longest_wait)
                 }
             }
         )
@@ -73,5 +75,4 @@ def update_graph(relayoutData):
 
     return {'data': queue_data, 'layout': queue_layout}, {'data': speed_data, 'layout': speed_layout}
 
-if __name__ == '__main__':
-    app.run_server(debug=True)
+if __name__ == '__main__':    app.run_server(debug=True)
