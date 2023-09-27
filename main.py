@@ -9,13 +9,20 @@ CURR_DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 dummy_calls = pd.read_csv(CURR_DIR_PATH+'\\'+'test_data.csv', delimiter=';')
 
 df = pd.DataFrame(dummy_calls)
+month_fig=px.bar(df, x='Date', y=['call answered', 'calls missed', 'longest wait']) # monthly data
+month_fig.update_layout(legend_title_text='Monthly calls')
+month_fig.update_yaxes(title_text='Calls')
+
+numeric_columns = ['total calls', 'call answered', 'calls missed'] #daily data
+df[numeric_columns] = df[numeric_columns].apply(pd.to_numeric, errors='coerce')
+
 app = Dash(__name__)
 
 custom_colors = ['#FF5733', '#33FF57']
 
 app.layout = html.Div([
+    html.H3("Giggle Gear"),
     html.Div([
-    html.H2("Giggle Gear"),
     dcc.Graph( #Shows who in an call, whos waiting and whos available
         figure=px.bar(df, x="employee packing", y=["employee active", "emplyee inactive"],
                        barmode='group',
@@ -23,16 +30,26 @@ app.layout = html.Div([
                        labels={"employee packing": "Packing", "employee active": "Active", "emplyee inactive": "Inactive"}),
         style={'width': '50%', 'height': '50%'}
     ),
-    dcc.Graph(id='queue-graph', config={'displayModeBar': False}), # Display maximum waiting
-], style={'display':'flex'}),
-html.Div([
-    dcc.Graph(id='speed-indicator', config={'displayModeBar': False}), #Display warning
     html.Div(id='besvarade'), # shows answered and missed calls
     dcc.Interval(
         id='interval-component',
         interval=1 * 10000,  
         n_intervals=0  
-    )
+    ),
+    dcc.Graph(id='queue-graph', config={'displayModeBar': False}), # Display maximum waiting
+], style={'display':'flex'}),
+html.Div([
+    dcc.Graph( # monthly data
+        id='line_plot',
+        figure=month_fig),
+    dcc.Graph( # Daily data
+        figure=px.bar(df, x="Date", y=["call answered", "calls missed"], title='Distribution of Call Center Calls',
+                       height=400, color_discrete_sequence=custom_colors,
+                       ),
+        style={'width': '50%', 'height': '50%'}
+    ),
+    dcc.Graph(id='speed-indicator', config={'displayModeBar': False}, style={'width': '50%', 'height': '50%'}), #Display warning
+    
 ], style={'display':'flex'})
 ])
 
