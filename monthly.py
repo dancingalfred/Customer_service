@@ -10,6 +10,8 @@ dummy_calls = pd.read_csv(CURR_DIR_PATH+'\\'+'test_data.csv', delimiter=';')
 df = pd.DataFrame(dummy_calls)
 
 fig=px.bar(df, x='Date', y=['call answered', 'calls missed', 'longest wait'])
+fig.update_layout(legend_title_text='Monthly calls')
+fig.update_yaxes(title_text='Calls')
 app = Dash(__name__)
 
 app.layout = html.Div([
