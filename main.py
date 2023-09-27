@@ -21,7 +21,7 @@ app = Dash(__name__)
 custom_colors = ['#FF5733', '#33FF57']
 
 app.layout = html.Div([
-    html.H3("Giggle Gear"),
+    html.H1("Giggle Gear Dashboard"),
     html.Div([
     dcc.Graph( #Shows who in an call, whos waiting and whos available
         figure=px.bar(df, x="employee packing", y=["employee active", "emplyee inactive"],
@@ -30,12 +30,7 @@ app.layout = html.Div([
                        labels={"employee packing": "Packing", "employee active": "Active", "emplyee inactive": "Inactive"}),
         style={'width': '50%', 'height': '50%'}
     ),
-    html.Div(id='besvarade'), # shows answered and missed calls
-    dcc.Interval(
-        id='interval-component',
-        interval=1 * 10000,  
-        n_intervals=0  
-    ),
+    html.Div(id='besvarade', style={'fontSize': 44}), # shows answered and missed calls  TODO make bigger
     dcc.Graph(id='queue-graph', config={'displayModeBar': False}), # Display maximum waiting
 ], style={'display':'flex'}),
 html.Div([
@@ -61,7 +56,7 @@ html.Div([
 )
 def update_graph(relayoutData):
     # Update the queue graph
-    column_name = 'Que amount'
+    column_name = 'Kö'
     value = df.at[0, column_name]
     queue_data = [
         go.Bar(
@@ -74,7 +69,7 @@ def update_graph(relayoutData):
         )
     ]
     queue_layout = go.Layout(
-        title=f'Longest Queue time',
+        title=f'Antal i kö',
         bargap=0.1
     )
 
@@ -118,10 +113,12 @@ def update_graph(relayoutData):
     Output('besvarade', 'children'),
     Input('interval-component', 'n_intervals')
 )
-def update_live_number(n_intervals): # pick answerd and missed calls from a certain moment in time.
+def update_live_number(n_intervals): # pick answered and missed calls from a certain moment in time.
     besvarade = df['call answered'].iloc[1] 
     missade = df['calls missed'].iloc[1]
-    return f"Besvarade: {besvarade}\nMissade: {missade}"
+    # style = {'fontSize': '20px'}
+    return f"Besvarade samtal: {besvarade}\nMissade samtal: {missade}"
+    # return html.Div([html.P(f"Besvarade: {besvarade}", style=style),html.P(f"Missade: {missade}", style=style)])
 
 
 if __name__ == '__main__':
