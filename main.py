@@ -14,6 +14,7 @@ app = Dash(__name__)
 custom_colors = ['#FF5733', '#33FF57']
 
 app.layout = html.Div([
+    html.Div([
     html.H2("Giggle Gear"),
     dcc.Graph( #Shows who in an call, whos waiting and whos available
         figure=px.bar(df, x="employee packing", y=["employee active", "emplyee inactive"],
@@ -23,9 +24,9 @@ app.layout = html.Div([
         style={'width': '50%', 'height': '50%'}
     ),
     dcc.Graph(id='queue-graph', config={'displayModeBar': False}), # Display maximum waiting
-    dcc.Graph(id='speed-indicator', config={'displayModeBar': False}), #Display warning
 ], style={'display':'flex'}),
 html.Div([
+    dcc.Graph(id='speed-indicator', config={'displayModeBar': False}), #Display warning
     html.Div(id='besvarade'), # shows answered and missed calls
     dcc.Interval(
         id='interval-component',
@@ -33,6 +34,7 @@ html.Div([
         n_intervals=0  
     )
 ], style={'display':'flex'})
+])
 
 
 @app.callback(
