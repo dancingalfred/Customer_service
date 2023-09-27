@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import plotly.express as px
 from dash import Dash, html, Input, Output, dcc
 
 CURR_DIR_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -9,6 +10,8 @@ dummy_calls = pd.read_csv(CURR_DIR_PATH+'\\'+'test_data.csv', delimiter=';')
 df = pd.DataFrame(dummy_calls)
 app = Dash(__name__)
 
+custom_colors = ['#FF5733', '#33FF57']
+
 app.layout = html.Div([
     html.H2("Samtal"),
     html.Div(id='besvarade'), # shows answered and missed calls
@@ -16,6 +19,13 @@ app.layout = html.Div([
         id='interval-component',
         interval=1 * 10000,  
         n_intervals=0  
+    ),
+    dcc.Graph(
+        figure=px.bar(df, x="employee packing", y=["employee active", "emplyee inactive"],
+                       barmode='group',
+                       height=400, color_discrete_sequence=custom_colors,
+                       labels={"employee packing": "Packing", "employee active": "Active", "emplyee inactive": "Inactive"}),
+        style={'width': '50%', 'height': '50%'}
     )
 ])
 
