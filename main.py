@@ -30,7 +30,12 @@ app.layout = html.Div([
                        labels={"employee packing": "Packing", "employee active": "Active", "emplyee inactive": "Inactive"}),
         style={'width': '50%', 'height': '50%'}
     ),
-    html.Div(id='besvarade', style={'fontSize': 44}), # shows answered and missed calls  TODO make bigger
+    html.Div(id='besvarade', style={'fontSize': 24}), # shows answered and missed calls  TODO make bigger
+    dcc.Interval(
+        id='interval-component',
+        interval=1 * 10000,  # Interval in milliseconds (e.g., every 1 second)
+        n_intervals=0  # Initial number of intervals
+    ),
     dcc.Graph(id='queue-graph', config={'displayModeBar': False}), # Display maximum waiting
 ], style={'display':'flex'}),
 html.Div([
@@ -56,15 +61,15 @@ html.Div([
 )
 def update_graph(relayoutData):
     # Update the queue graph
-    column_name = 'Kö'
+    column_name = 'Que amount'
     value = df.at[0, column_name]
     queue_data = [
         go.Bar(
-            x=[column_name],
+            x=[""],
             y=[value],
             text=str(value),
             textposition='inside',  # Display the number above the bar
-            marker=dict(color='royalblue'),
+            marker=dict(color='#33FF57'),
             textfont={'size': 80}  # Adjust the font size here
         )
     ]
