@@ -11,7 +11,7 @@ df = pd.read_csv('test_data.csv', delimiter=';')
 app = Dash(__name__)
 
 app.layout = html.Div(children=[
-    html.H1(children="Customers in Queue"),
+    html.H1(children="Customers in Queue"),#TA BORT?!
     dcc.Graph(id='queue-graph', config={'displayModeBar': False}),
 ])
 
@@ -27,14 +27,15 @@ def update_graph(relayoutData):
             x=[column_name],
             y=[value],
             text=str(value),
-            textposition='outside',  # Display the number above the bar
-            marker=dict(color='royalblue')
+            textposition='inside',  # Display the number above the bar
+            marker=dict(color='royalblue'),
+            textfont={'size': 80}  # Adjust the font size here
+        
         )
     ]
     layout = go.Layout(
-        title=f'{column_name} Value',
-        xaxis=dict(title=''),
-        yaxis=dict(title=f'{column_name} Value'),
+        title=f'Customers in que',
+
         bargap=0.1
     )
     return {'data': data, 'layout': layout}
