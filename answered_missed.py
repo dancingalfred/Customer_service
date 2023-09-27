@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 from dash import Dash, html, Input, Output, dcc
-import dash.dependencies as dd
 
 CURR_DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 
